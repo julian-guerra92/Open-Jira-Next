@@ -52,6 +52,26 @@ export const EntriesProvider = ({ children }: Props) => {
       }
    }
 
+   const deleteEntry = async (entry: Entry, showSnackbar = false) => {
+      try {
+         const { _id } = entry;
+         await entriesApi.delete<Entry>(`/entries/${_id}`);
+         dispatch({ type: 'Entries - Delete Data', payload: entry });
+         if (showSnackbar) {
+            enqueueSnackbar('Successfully Deleted Entry!', {
+               variant: 'info',
+               autoHideDuration: 2000,
+               anchorOrigin: {
+                  vertical: 'top',
+                  horizontal: 'right'
+               }
+            })
+         }
+      } catch (error) {
+         console.log({ error });
+      }
+   }
+
    //*Carga las entradas al iniciar la App desde la BD
    useEffect(() => {
       loadEntries();
@@ -62,7 +82,8 @@ export const EntriesProvider = ({ children }: Props) => {
          ...state,
          //Methods
          addNewEntry,
-         updateEntry
+         updateEntry,
+         deleteEntry
       }}>
          {children}
       </EntriesContext.Provider>

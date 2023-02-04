@@ -1,5 +1,6 @@
 import { ChangeEvent, useState, useMemo, useContext } from 'react';
 import { GetServerSideProps } from 'next';
+import NextLink from 'next/link';
 import {
    Button,
    capitalize,
@@ -32,7 +33,7 @@ interface Props {
 
 export const EntryPage = ({ entry }: Props) => {
 
-   const { updateEntry } = useContext(EntriesContext)
+   const { updateEntry, deleteEntry } = useContext(EntriesContext)
 
    const [inputValue, setInputValue] = useState(entry.description);
 
@@ -62,6 +63,10 @@ export const EntryPage = ({ entry }: Props) => {
          status
       }
       updateEntry(updatedEntry, true);
+   }
+
+   const onDelete = () => {
+      deleteEntry(entry, true);
    }
 
    return (
@@ -124,17 +129,23 @@ export const EntryPage = ({ entry }: Props) => {
                </Card>
             </Grid>
          </Grid>
-         <IconButton
-            sx={{
-               position: 'fixed',
-               bottom: 30,
-               right: 30,
-               backgroundColor: 'red'
-            }}
-            size='large'
+         <NextLink
+            href={'/'}
+            passHref
          >
-            <DeleteOutlineOutlinedIcon fontSize='large' />
-         </IconButton>
+            <IconButton
+               sx={{
+                  position: 'fixed',
+                  bottom: 30,
+                  right: 30,
+                  backgroundColor: 'red'
+               }}
+               size='large'
+               onClick={onDelete}
+            >
+               <DeleteOutlineOutlinedIcon fontSize='large' />
+            </IconButton>
+         </NextLink>
       </Layout>
    )
 }
